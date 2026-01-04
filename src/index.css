@@ -1,7 +1,82 @@
-/* URL IMPORTS (SUCH AS FONT IMPORTS) SHOULD BE KEPT ABOVE TAILWIND IMPORTS - DO NOT DELETE THIS COMMENT */
 
-/* PLEASE NOTE: THESE TAILWIND IMPORTS SHOULD NEVER BE DELETED - DO NOT DELETE THIS COMMENT */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-/* DO NOT DELETE THESE TAILWIND IMPORTS, OTHERWISE THE STYLING WILL NOT RENDER AT ALL - DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Theme Variables */
+    --bg-gradient-start: #FFFFFF;
+    --bg-gradient-end: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --card-border: #E5E7EB;
+    --text-primary: #1F2937;
+    --text-secondary: #6B7280;
+    --accent-color: #FF6B00;
+    --link-color: #2563EB;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .dark {
+    /* Dark Theme Variables */
+    --bg-gradient-start: #0F172A;
+    --bg-gradient-end: #020617;
+    --card-bg: #1E293B;
+    --card-border: #334155;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --accent-color: #FF8C00;
+    --link-color: #60A5FA;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .card-modern {
+    @apply bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-lg transition-all duration-300;
+  }
+  
+  .dark .card-modern {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 15px rgba(255, 140, 0, 0.05);
+  }
+
+  .btn-primary {
+    @apply bg-[var(--accent-color)] text-white font-semibold px-6 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-lg hover:bg-white hover:text-gray-900 transition-colors;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}

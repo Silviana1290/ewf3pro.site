@@ -1,49 +1,68 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Clock, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 interface NewsCardProps {
-  image: string;
-  date: string;
+  id: string;
   title: string;
   excerpt: string;
-  category?: string;
+  source: string;
+  timestamp: string;
+  imageUrl: string;
+  category: string;
+  onClick?: () => void;
 }
 export function NewsCard({
-  image,
-  date,
+  id,
   title,
   excerpt,
-  category
+  source,
+  timestamp,
+  imageUrl,
+  category,
+  onClick
 }: NewsCardProps) {
-  return <motion.article className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col h-full" whileHover={{
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/article/${id}`);
+  };
+  return <motion.div whileHover={{
     y: -4
-  }}>
+  }} transition={{
+    duration: 0.2
+  }} onClick={handleClick} className="bg-white dark:bg-dark-surface rounded-lg shadow-md overflow-hidden cursor-pointer group border border-gray-100 dark:border-gray-700 transition-colors duration-300">
       <div className="relative h-48 overflow-hidden">
-        <img src={image} alt={title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
-        {category && <span className="absolute top-3 left-3 bg-orange-600 text-white text-xs font-bold px-2 py-1 rounded">
-            {category}
-          </span>}
-      </div>
-
-      <div className="p-5 flex flex-col flex-grow">
-        <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs mb-3">
-          <Calendar size={14} className="mr-1.5" />
-          {date}
+        <motion.img whileHover={{
+        scale: 1.05
+      }} transition={{
+        duration: 0.3
+      }} src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        <div className="absolute top-3 left-3">
+          <span className="px-3 py-1 bg-orange-600 text-white text-xs font-bold rounded-full shadow-lg">
+            {source}
+          </span>
         </div>
-
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-orange-600 dark:group-hover:text-orange-500 transition-colors">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+      <div className="p-5">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-xs font-bold text-orange-600 dark:text-orange-500 uppercase tracking-wider">
+            {category}
+          </span>
+          <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+            <Clock className="w-3 h-3" />
+            <span>{timestamp}</span>
+          </div>
+        </div>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-orange-600 dark:group-hover:text-orange-500 transition-colors">
           {title}
         </h3>
-
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">
           {excerpt}
         </p>
-
-        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
-          <button className="text-orange-600 dark:text-orange-500 text-sm font-semibold flex items-center group-hover:translate-x-1 transition-transform">
-            Read More <ArrowRight size={14} className="ml-1" />
-          </button>
+        <div className="flex items-center justify-end">
+          <ExternalLink className="w-4 h-4 text-orange-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
         </div>
       </div>
-    </motion.article>;
+    </motion.div>;
 }

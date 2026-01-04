@@ -1,122 +1,160 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Header } from '../components/Header';
-import { MarketTicker } from '../components/MarketTicker';
-import { LoadingSpinner } from '../components/LoadingSpinner';
-import { api, MarketData } from '../services/mockApi';
-import { TrendingUp, TrendingDown, Activity, DollarSign } from 'lucide-react';
-export function MarketPage() {
-  const [marketData, setMarketData] = useState<MarketData[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await api.getMarketData();
-      setMarketData(data);
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
-  if (loading) return <div className="min-h-screen">
-        <Header />
-        <LoadingSpinner />
-      </div>;
-  return <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-      <Header />
-      <MarketTicker />
-
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold border-l-4 border-orange-600 pl-4">
-            Market Overview
+import { TrendingUp, TrendingDown, DollarSign, BarChart2, Activity } from 'lucide-react';
+import { useMarketData } from '../hooks/useMarketData';
+import { PriceChart } from '../components/PriceChart';
+import { NewsFeed } from '../components/NewsFeed';
+interface MarketPageProps {
+  language: 'ID' | 'EN';
+}
+export function MarketPage({
+  language
+}: MarketPageProps) {
+  const {
+    data
+  } = useMarketData(3000);
+  const categories = [{
+    name: 'Forex',
+    icon: DollarSign,
+    color: 'text-green-500'
+  }, {
+    name: 'Indices',
+    icon: BarChart2,
+    color: 'text-blue-500'
+  }, {
+    name: 'Commodities',
+    icon: Activity,
+    color: 'text-orange-500'
+  }, {
+    name: 'Crypto',
+    icon: TrendingUp,
+    color: 'text-purple-500'
+  }];
+  return <div className="min-h-screen py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div initial={{
+        opacity: 0,
+        y: -20
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} className="mb-10">
+          <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-4">
+            {language === 'ID' ? 'Pasar Finansial' : 'Financial Markets'}
           </h1>
-          <div className="text-sm text-gray-500">
-            Last updated: {new Date().toLocaleTimeString()}
-          </div>
-        </div>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl">
+            Real-time quotes, charts, and analysis for Forex, Commodities,
+            Indices, and Cryptocurrencies.
+          </p>
+        </motion.div>
 
-        {/* Market Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          {marketData.slice(0, 4).map(item => <motion.div key={item.symbol} initial={{
+        {/* Category Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {categories.map((cat, index) => <motion.div key={cat.name} initial={{
           opacity: 0,
           y: 20
         }} animate={{
           opacity: 1,
           y: 0
-        }} className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="font-bold text-gray-500 dark:text-gray-400 text-sm">
-                    {item.name}
-                  </h3>
-                  <p className="text-xl font-bold mt-1">{item.symbol}</p>
+        }} transition={{
+          delay: index * 0.1
+        }} className="card-modern p-6 hover:border-orange-500 transition-colors cursor-pointer">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 bg-gray-100 dark:bg-gray-800 rounded-lg ${cat.color}`}>
+                  <cat.icon className="w-6 h-6" />
                 </div>
-                <div className={`p-2 rounded-full ${item.isUp ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                  {item.isUp ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
-                </div>
-              </div>
-              <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-bold">{item.value}</span>
-                <span className={`text-sm font-bold ${item.isUp ? 'text-green-600' : 'text-red-600'}`}>
-                  {item.change} ({item.changePercent})
+                <span className="text-xs font-bold text-gray-500 uppercase">
+                  Live
                 </span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                {cat.name}
+              </h3>
+              <div className="text-sm text-gray-500">
+                View all {cat.name} pairs
               </div>
             </motion.div>)}
         </div>
 
-        {/* Detailed Market Table */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden mb-8">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
-            <h2 className="text-xl font-bold flex items-center">
-              <Activity className="mr-2 text-orange-600" />
-              Live Market Data
+        {/* Live Market Table */}
+        <div className="card-modern overflow-hidden mb-12">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Live Quotes
             </h2>
             <div className="flex space-x-2">
-              <button className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded-full font-bold">
-                Forex
-              </button>
-              <button className="px-3 py-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
-                Indices
-              </button>
-              <button className="px-3 py-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
-                Commodities
-              </button>
+              {['All', 'Forex', 'Commodities', 'Indices'].map(filter => <button key={filter} className="px-3 py-1 text-sm rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-orange-500 hover:text-white transition-colors">
+                  {filter}
+                </button>)}
             </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs uppercase">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-800/50">
                 <tr>
-                  <th className="p-4">Symbol</th>
-                  <th className="p-4">Name</th>
-                  <th className="p-4">Price</th>
-                  <th className="p-4">Change</th>
-                  <th className="p-4">% Change</th>
-                  <th className="p-4 text-right">Action</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Symbol
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Change
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    % Change
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    High/Low
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    Trend
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-                {marketData.map(item => <tr key={item.symbol} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                    <td className="p-4 font-bold">{item.symbol}</td>
-                    <td className="p-4 text-gray-500 dark:text-gray-400">
-                      {item.name}
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {data.map(item => <tr key={item.symbol} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="font-bold text-gray-900 dark:text-white">
+                          {item.symbol}
+                        </div>
+                        <div className="ml-2 text-xs text-gray-500">
+                          {item.name}
+                        </div>
+                      </div>
                     </td>
-                    <td className="p-4 font-mono font-bold">{item.value}</td>
-                    <td className={`p-4 font-bold ${item.isUp ? 'text-green-600' : 'text-red-600'}`}>
-                      {item.change}
+                    <td className="px-6 py-4 whitespace-nowrap text-right font-mono font-bold text-gray-900 dark:text-white">
+                      {item.price.toFixed(item.price > 100 ? 2 : 4)}
                     </td>
-                    <td className={`p-4 font-bold ${item.isUp ? 'text-green-600' : 'text-red-600'}`}>
-                      {item.changePercent}
+                    <td className={`px-6 py-4 whitespace-nowrap text-right font-semibold ${item.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {item.change > 0 ? '+' : ''}
+                      {item.change.toFixed(4)}
                     </td>
-                    <td className="p-4 text-right">
-                      <button className="text-orange-600 hover:text-orange-700 font-bold text-sm">
-                        Trade
-                      </button>
+                    <td className={`px-6 py-4 whitespace-nowrap text-right font-semibold ${item.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {item.changePercent.toFixed(2)}%
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-xs text-gray-500">
+                      <div>H: {item.high}</div>
+                      <div>L: {item.low}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap w-32">
+                      <PriceChart trend={item.change >= 0 ? 'up' : 'down'} />
                     </td>
                   </tr>)}
               </tbody>
             </table>
           </div>
         </div>
-      </main>
+
+        {/* Market News */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-l-4 border-orange-600 pl-4">
+            Market News
+          </h2>
+          <NewsFeed language={language} />
+        </div>
+      </div>
     </div>;
 }

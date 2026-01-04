@@ -3,38 +3,50 @@ type FontSize = 'small' | 'medium' | 'large';
 interface FontSizeContextType {
   fontSize: FontSize;
   setFontSize: (size: FontSize) => void;
+  scale: number;
 }
 const FontSizeContext = createContext<FontSizeContextType | undefined>(undefined);
 export function FontSizeProvider({
   children
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [fontSize, setFontSizeState] = useState<FontSize>(() => {
-    const saved = localStorage.getItem('fontSize');
+    const saved = localStorage.getItem('ewfpro_fontsize');
     return saved as FontSize || 'medium';
   });
-  useEffect(() => {
-    localStorage.setItem('fontSize', fontSize);
-    const root = window.document.documentElement;
-    // Remove previous size classes
-    root.classList.remove('text-sm', 'text-base', 'text-lg');
-    // Add new size class
+  const setFontSize = (size: FontSize) => {
+    setFontSizeState(size);
+    localStorage.setItem('ewfpro_fontsize', size);
+  };
+  const getScale = () => {
     switch (fontSize) {
       case 'small':
-        root.classList.add('text-sm'); // Base 14px
-        break;
-      case 'medium':
-        root.classList.add('text-base'); // Base 16px
+        return 0.9;
+      case 'large':
+        return 1.1;
+      default:
+        return 1;
+    }
+  };
+  // Apply font size to root for rem scaling if needed, or just provide the scale
+  useEffect(() => {
+    const root = document.documentElement;
+    switch (fontSize) {
+      case 'small':
+        root.style.fontSize = '14px';
         break;
       case 'large':
-        root.classList.add('text-lg'); // Base 18px
+        root.style.fontSize = '18px';
         break;
+      default:
+        root.style.fontSize = '16px';
     }
   }, [fontSize]);
   return <FontSizeContext.Provider value={{
     fontSize,
-    setFontSize: setFontSizeState
+    setFontSize,
+    scale: getScale()
   }}>
       {children}
     </FontSizeContext.Provider>;

@@ -1,159 +1,183 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-interface IndicatorData {
-  indicator: string;
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+interface Indicator {
+  name: string;
+  nameId: string;
   definition: string;
-  effectUsd: string;
-  effectGold: string;
+  definitionId: string;
+  impact: string;
+  impactId: string;
+  effect: 'up' | 'down' | 'neutral';
 }
-const indicators: IndicatorData[] = [{
-  indicator: 'CPI',
-  definition: 'Indikator perubahan harga barang dan jasa yg dibeli oleh konsumen. Sebagai acuan indikator inflasi',
-  effectUsd: 'CPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
+const indicators: Indicator[] = [{
+  name: 'CPI',
+  nameId: 'IHK (Indeks Harga Konsumen)',
+  definition: 'Indicator of price changes for goods and services purchased by consumers. As a reference indicator of inflation',
+  definitionId: 'Indikator perubahan harga barang dan jasa yg dibeli oleh konsumen. Sebagai acuan indikator inflasi',
+  impact: 'CPI UP, ECONOMY UP, INFLATION UP, INTEREST RATE UP, USD UP',
+  impactId: 'CPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK',
+  effect: 'down'
 }, {
-  indicator: 'CORE CPI',
-  definition: 'Indikator perubahan harga barang dan jasa yg dibeli oleh konsumen (tidak termasuk bahan pangan dan energi). Sebagai acuan indikator inflasi',
-  effectUsd: 'CORE CPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
+  name: 'Core CPI',
+  nameId: 'IHK Inti',
+  definition: 'Indicator of price changes for goods and services purchased by consumers (excluding food and energy). As a reference indicator of inflation',
+  definitionId: 'Indikator perubahan harga barang dan jasa yg dibeli oleh konsumen (tidak termasuk bahan pangan dan energi). Sebagai acuan indikator inflasi',
+  impact: 'CORE CPI UP, ECONOMY UP, INFLATION UP, INTEREST RATE UP, USD UP',
+  impactId: 'CORE CPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK',
+  effect: 'down'
 }, {
-  indicator: 'PPI',
-  definition: 'Indikator perubahan harga bahan baku yg dibeli oleh produsen. Sebagai acuan indikator inflasi',
-  effectUsd: 'PPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
+  name: 'PPI',
+  nameId: 'IHP (Indeks Harga Produsen)',
+  definition: 'Indicator of price changes for raw materials purchased by producers. As a reference indicator of inflation',
+  definitionId: 'Indikator perubahan harga bahan baku yg dibeli oleh produsen. Sebagai acuan indikator inflasi',
+  impact: 'PPI UP, ECONOMY UP, INFLATION UP, INTEREST RATE UP, USD UP',
+  impactId: 'PPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK',
+  effect: 'down'
 }, {
-  indicator: 'CORE PPI',
-  definition: 'Indikator perubahan harga bahan baku yg dibeli oleh produsen (tidak termasuk energi). Sebagai acuan indikator inflasi',
-  effectUsd: 'CORE PPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
+  name: 'Core PPI',
+  nameId: 'IHP Inti',
+  definition: 'Indicator of price changes for raw materials purchased by producers (excluding food and energy). As a reference indicator of inflation',
+  definitionId: 'Indikator perubahan harga bahan baku yg dibeli oleh produsen (tidak termasuk energi). Sebagai acuan indikator inflasi',
+  impact: 'CORE PPI UP, ECONOMY UP, INFLATION UP, INTEREST RATE UP, USD UP',
+  impactId: 'CORE PPI NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK',
+  effect: 'down'
 }, {
-  indicator: 'INDUSTRIAL PRODUCTIONS',
-  definition: 'Tingkat volume produksi semua sektor (pabrik, pertambangan, perusahaan energi)',
-  effectUsd: 'INDUSTRIAL PRODUCTION NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
+  name: 'Industrial Production',
+  nameId: 'Produksi Industri',
+  definition: 'Production volume level of all sectors (manufacturing, mining, utilities)',
+  definitionId: 'Tingkat volume produksi semua sektor (pabrik, pertambangan, perusahaan energi)',
+  impact: 'INDUSTRIAL PRODUCTION UP, ECONOMY UP, INFLATION UP, INTEREST RATE UP, USD UP',
+  impactId: 'INDUSTRIAL PRODUCTION NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK',
+  effect: 'down'
 }, {
-  indicator: 'DURABLE GOODS',
-  definition: 'Tingkat penjualan barang yg memiliki masa hidup 10 tahun atau lebih. Menunjukkan keyakinan masyarakat terhadap ekonomi kedepan.',
-  effectUsd: 'DURABLE GOODS NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'TRADE BALANCE',
-  definition: 'Besar net ekspor suatu negara = volume ekspor - volume impor',
-  effectUsd: 'TRADE BALANCE NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'BUILDING PERMITS',
-  definition: 'Pertumbuhan perijinan pembangunan tempat tinggal/ perumahan',
-  effectUsd: 'BUILDING PERMITS NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'PENDING HOME SALES',
-  definition: 'Jumlah pesanan (orderan) pembelian rumah/ apartemen/ tempat tinggal',
-  effectUsd: 'PENDING HOME SALES NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'HOUSING STARTS',
-  definition: 'Jumlah pembangunan rumah baru',
-  effectUsd: 'HOUSING STARTS NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'EXISTING HOME SALES',
-  definition: 'Jumlah volume transaksi penjualan rumah',
-  effectUsd: 'EXISTING HOME SALES NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'NEW HOME SALES',
-  definition: 'Jumlah volume transaksi penjualan rumah BARU',
-  effectUsd: 'NEW HOME SALES NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'UNEMPLOYMENT RATE',
-  definition: 'Tingkat pertumbuhan pengangguran',
-  effectUsd: 'UNEMPLOYMENT RATE NAIK, EKONOMI TURUN, INFLASI TURUN, SUKU BUNGA TURUN, USD TURUN.',
-  effectGold: 'NAIK'
-}, {
-  indicator: 'INITIAL JOBLESS CLAIMS',
-  definition: 'Tunjangan sosial yg dibayarkan kepada pengangguran',
-  effectUsd: 'INITIAL JOBLESS CLAIMS NAIK, EKONOMI TURUN, INFLASI TURUN, SUKU BUNGA TURUN, USD TURUN.',
-  effectGold: 'NAIK'
-}, {
-  indicator: 'NONFARM PAYROLL',
-  definition: 'Pertambahan tenaga kerja baru diluar sektor pertanian',
-  effectUsd: 'NONFARM PAYROLL NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'RETAIL SALES',
-  definition: 'Tingkat penjualan barang retail di negara tersebut',
-  effectUsd: 'RETAIL SALES NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK.',
-  effectGold: 'TURUN'
-}, {
-  indicator: 'FOMC MEETING',
-  definition: 'Federal open market commitee = Pertemuan Perwakilan Bank Sentral dari Negara Bagian di US untuk menyampaikan pandangan ekonomi US di negara bagian masing2. Ini berguba untuk menentukan perlu / tidaknya menaikkan suku bunga',
-  effectUsd: 'SUKU BUNGA NAIK, USD NAIK',
-  effectGold: 'TURUN'
+  name: 'Trade Balance',
+  nameId: 'Neraca Perdagangan',
+  definition: 'Net export size of a country = export volume - import volume',
+  definitionId: 'Besar net ekspor suatu negara = volume expor - volume impor',
+  impact: 'TRADE BALANCE UP, ECONOMY UP, INFLATION UP, INTEREST RATE UP, USD UP',
+  impactId: 'TRADE BALANCE NAIK, EKONOMI NAIK, INFLASI NAIK, SUKU BUNGA NAIK, USD NAIK',
+  effect: 'down'
 }];
-export function EconomicIndicators() {
-  return <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-          <span className="w-2 h-8 bg-orange-600 mr-3 rounded-full"></span>
-          INDIKATOR EKONOMI
-        </h2>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Panduan lengkap pengaruh indikator ekonomi terhadap USD dan Emas
-        </p>
-      </div>
+interface EconomicIndicatorsProps {
+  language: 'ID' | 'EN';
+}
+export function EconomicIndicators({
+  language
+}: EconomicIndicatorsProps) {
+  const getEffectIcon = (effect: 'up' | 'down' | 'neutral') => {
+    if (effect === 'up') return <TrendingUp className="w-5 h-5 text-green-600" />;
+    if (effect === 'down') return <TrendingDown className="w-5 h-5 text-red-600" />;
+    return <Minus className="w-5 h-5 text-gray-600" />;
+  };
+  return <section className="py-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div initial={{
+        opacity: 0,
+        y: 20
+      }} whileInView={{
+        opacity: 1,
+        y: 0
+      }} viewport={{
+        once: true
+      }} className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            {language === 'ID' ? 'Indikator Ekonomi' : 'Economic Indicators'}
+          </h2>
+          <p className="text-gray-600">
+            {language === 'ID' ? 'Panduan lengkap indikator ekonomi dan dampaknya terhadap pasar' : 'Complete guide to economic indicators and their market impact'}
+          </p>
+        </motion.div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wider">
-              <th className="p-4 border-b border-gray-200 dark:border-gray-700 font-bold w-1/6">
-                Indikator
-              </th>
-              <th className="p-4 border-b border-gray-200 dark:border-gray-700 font-bold w-1/3">
-                Definisi
-              </th>
-              <th className="p-4 border-b border-gray-200 dark:border-gray-700 font-bold w-1/3">
-                Efek ke Ekonomi (USD)
-              </th>
-              <th className="p-4 border-b border-gray-200 dark:border-gray-700 font-bold w-1/6 text-center">
-                Efek ke Emas
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {indicators.map((item, index) => <motion.tr key={item.indicator} initial={{
-            opacity: 0,
-            y: 10
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} viewport={{
-            once: true
-          }} transition={{
-            delay: index * 0.05
-          }} className="hover:bg-orange-50 dark:hover:bg-gray-700/50 transition-colors">
-                <td className="p-4 font-bold text-orange-600 dark:text-orange-500 align-top">
-                  {item.indicator}
-                </td>
-                <td className="p-4 text-gray-600 dark:text-gray-300 align-top text-sm leading-relaxed">
-                  {item.definition}
-                </td>
-                <td className="p-4 text-gray-700 dark:text-gray-200 font-medium align-top text-sm leading-relaxed">
-                  {item.effectUsd}
-                </td>
-                <td className="p-4 align-top text-center">
-                  <span className={`
-                    inline-block px-3 py-1 rounded-full text-xs font-bold
-                    ${item.effectGold === 'NAIK' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}
-                  `}>
-                    {item.effectGold}
-                  </span>
-                </td>
-              </motion.tr>)}
-          </tbody>
-        </table>
+        <motion.div initial={{
+        opacity: 0,
+        y: 20
+      }} whileInView={{
+        opacity: 1,
+        y: 0
+      }} viewport={{
+        once: true
+      }} transition={{
+        delay: 0.2
+      }} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                    {language === 'ID' ? 'Indikator' : 'Indicator'}
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                    {language === 'ID' ? 'Definisi' : 'Definition'}
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                    {language === 'ID' ? 'Efek ke Ekonomi (USD)' : 'Economic Impact (USD)'}
+                  </th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                    {language === 'ID' ? 'Efek ke Emas' : 'Gold Impact'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {indicators.map((indicator, index) => <motion.tr key={indicator.name} initial={{
+                opacity: 0,
+                x: -20
+              }} whileInView={{
+                opacity: 1,
+                x: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                delay: index * 0.05
+              }} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="font-semibold text-gray-900">
+                        {indicator.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {indicator.nameId}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-700">
+                        {language === 'ID' ? indicator.definitionId : indicator.definition}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        {language === 'ID' ? indicator.impactId : indicator.impact}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="inline-flex items-center justify-center px-3 py-1 bg-gray-100 rounded-full">
+                        {getEffectIcon(indicator.effect)}
+                        <span className="ml-2 text-sm font-semibold text-gray-700">
+                          {language === 'ID' ? 'TURUN' : 'DOWN'}
+                        </span>
+                      </div>
+                    </td>
+                  </motion.tr>)}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
+        <motion.div initial={{
+        opacity: 0,
+        y: 20
+      }} whileInView={{
+        opacity: 1,
+        y: 0
+      }} viewport={{
+        once: true
+      }} transition={{
+        delay: 0.4
+      }} className="mt-6 text-center">
+          <a href="https://www.equityworld-futures.com/index.php/id/edukasi/glosarium" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors">
+            {language === 'ID' ? 'Lihat Glosarium Lengkap' : 'View Complete Glossary'}
+            <TrendingUp className="w-5 h-5 ml-2" />
+          </a>
+        </motion.div>
       </div>
-    </div>;
+    </section>;
 }

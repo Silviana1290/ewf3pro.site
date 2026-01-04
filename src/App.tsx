@@ -1,46 +1,70 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { FontSizeProvider } from './contexts/FontSizeContext';
+import { Header } from './components/Header';
+import { WorldClock } from './components/WorldClock';
+import { MarketTicker } from './components/MarketTicker';
+import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { MarketPage } from './pages/MarketPage';
+import { EconomyPage } from './pages/EconomyPage';
+import { CommodityPage } from './pages/CommodityPage';
+import { FiscalMonetaryPage } from './pages/FiscalMonetaryPage';
 import { CalendarPage } from './pages/CalendarPage';
+import { GlobalPage } from './pages/GlobalPage';
+import { AnalysisPage } from './pages/AnalysisPage';
 import { UtilitiesPage } from './pages/UtilitiesPage';
 import { ArticleDetailPage } from './pages/ArticleDetailPage';
-import { CategoryPage } from './pages/CategoryPage';
+import { NewsArchivePage } from './pages/NewsArchivePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
-// Placeholder pages for those not fully implemented yet but needed for routing
-const PlaceholderPage = ({
-  title
-}: {
-  title: string;
-}) => <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-    <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-      <h1 className="text-4xl font-bold mb-4">{title}</h1>
-      <p className="text-xl text-gray-500">This page is under construction.</p>
-    </div>
-  </div>;
+import { AnimatePresence } from 'framer-motion';
 export function App() {
+  const [language, setLanguage] = useState<'ID' | 'EN'>('ID');
   return <ThemeProvider>
       <FontSizeProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/market" element={<MarketPage />} />
-            <Route path="/economy" element={<CategoryPage />} />
-            <Route path="/commodity" element={<CategoryPage />} />
-            <Route path="/fiscal-monetary" element={<CategoryPage />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/global" element={<CategoryPage />} />
-            <Route path="/market-analysis" element={<CategoryPage />} />
-            <Route path="/utilities" element={<UtilitiesPage />} />
-            <Route path="/article/:id" element={<ArticleDetailPage />} />
-            <Route path="/category/:category" element={<CategoryPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-          </Routes>
-        </Router>
+        <AuthProvider>
+          <BrowserRouter>
+            <div className="min-h-screen bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-dark-text transition-colors duration-300">
+              <Routes>
+                {/* Auth Routes - No Header/Footer */}
+                <Route path="/login" element={<LoginPage language={language} />} />
+                <Route path="/register" element={<RegisterPage language={language} />} />
+
+                {/* Main Routes - With Header/Footer */}
+                <Route path="/*" element={<>
+                      <Header language={language} onLanguageChange={setLanguage} />
+
+                      <div className="pt-[140px]">
+                        <WorldClock />
+                        <MarketTicker />
+
+                        <AnimatePresence mode="wait">
+                          <Routes>
+                            <Route path="/" element={<HomePage language={language} />} />
+                            <Route path="/market" element={<MarketPage language={language} />} />
+                            <Route path="/economy" element={<EconomyPage language={language} />} />
+                            <Route path="/commodity" element={<CommodityPage language={language} />} />
+                            <Route path="/fiscal" element={<FiscalMonetaryPage language={language} />} />
+                            <Route path="/calendar" element={<CalendarPage language={language} />} />
+                            <Route path="/global" element={<GlobalPage language={language} />} />
+                            <Route path="/analysis" element={<AnalysisPage language={language} />} />
+                            <Route path="/utilities" element={<UtilitiesPage language={language} />} />
+                            <Route path="/news" element={<NewsArchivePage language={language} />} />
+                            <Route path="/article/:id" element={<ArticleDetailPage language={language} />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                          </Routes>
+                        </AnimatePresence>
+
+                        <Footer language={language} />
+                      </div>
+                    </>} />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </AuthProvider>
       </FontSizeProvider>
     </ThemeProvider>;
 }

@@ -8,21 +8,19 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({
   children
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('theme');
+    const saved = localStorage.getItem('ewfpro_theme');
     return saved as Theme || 'light';
   });
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    const root = window.document.documentElement;
-    // Remove previous theme class
-    root.classList.remove('light', 'dark');
-    // Add new theme class
-    root.classList.add(theme);
-    // Set color scheme style for scrollbars etc
-    root.style.colorScheme = theme;
+    localStorage.setItem('ewfpro_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, [theme]);
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
