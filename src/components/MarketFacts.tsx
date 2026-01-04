@@ -21,13 +21,10 @@ export function MarketFacts({ language }: MarketFactsProps) {
   return (
     <div
       className="
-        sticky top-24
-        self-start
-        max-h-[calc(100vh-200px)]
-        overflow-hidden
         bg-white dark:bg-dark-surface
         rounded-lg shadow-sm
         border border-gray-200 dark:border-gray-700
+        overflow-hidden
       "
     >
       {/* HEADER */}
@@ -38,8 +35,8 @@ export function MarketFacts({ language }: MarketFactsProps) {
         <div className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/2 w-24 h-24 bg-orange-600 rounded-full opacity-20" />
       </div>
 
-      {/* CONTENT (SCROLL INTERNAL) */}
-      <div className="p-4 space-y-3 overflow-auto max-h-[calc(100vh-280px)]">
+      {/* CONTENT (SCROLL INTERNAL, BUKAN IKUT HALAMAN) */}
+      <div className="p-4 space-y-3 max-h-96 overflow-auto">
         {facts.map((fact, index) => (
           <motion.a
             key={fact.id}
