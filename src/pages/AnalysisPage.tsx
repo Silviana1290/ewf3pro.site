@@ -44,7 +44,7 @@ export function AnalysisPage({
           <div className="lg:col-span-2">
             <div className="card-modern overflow-hidden mb-8">
               <div className="relative h-64">
-                <img src="/image.png" alt="Featured Analysis" className="w-full h-full object-cover" />
+                <img src="/2607f5a9e75c61c55a2ed1c3e7abc60d.jpg" alt="Featured Analysis" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-6">
                   <span className="px-3 py-1 bg-orange-600 text-white text-xs font-bold rounded-full mb-2 inline-block">
