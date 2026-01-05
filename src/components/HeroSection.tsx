@@ -6,7 +6,7 @@ export function HeroSection() {
   return <div className="relative w-full h-[500px] overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <img src="/WhatsApp Image 2026-01-04 at 19.11.43.jpeg" alt="Market Studies Background" className="w-full h-full object-cover" />
+        <img src="/Background1.png" alt="Market Studies Background" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
       </div>
 
