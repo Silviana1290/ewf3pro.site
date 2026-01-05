@@ -10,7 +10,7 @@ export function HeroBanner() {
       }} transition={{
         duration: 0.8
       }} className="relative w-full h-[150px] sm:h-[200px] md:h-[250px]">
-          <img src="/WhatsApp Image 2026-01-04 at 19.11.43.jpeg" alt="Learn & Make a Right Decision Market Studies" className="w-full h-full object-cover object-center" />
+          <img src="/Background1.png" alt="Learn & Make a Right Decision Market Studies" className="w-full h-full object-cover object-center" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
         </motion.div>
       </div>
